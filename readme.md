@@ -13,7 +13,7 @@ This library is under development.
 1. Node.js / npm installed on your machine.
 2. 1 x Arduino Uno Board, plus a serial cable for connnecting the Uno to your PC.
 3. 3 x [Passive Infrared Motion detection modules](http://www.dx.com/p/ir-infrared-motion-detection-sensor-module-dc-5v-20v-139624#.VZ51c3hhX-A).  
-4. A [Parrot Rolling Spider Drone](http://www.parrot.com/usa/products/rolling-spider/).
+4. 1 x [Parrot Rolling Spider Drone](http://www.parrot.com/usa/products/rolling-spider/).
 
 ## Fritzing ##
 
