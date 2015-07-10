@@ -11,6 +11,10 @@ function getFormattedDate() {
   return str;
 }
 
+function done() {
+  console.log("done: "+ getFormattedDate());
+}
+
 console.log("waiting to connect: "+ getFormattedDate());
 
 rollingSpider.connect(function () {
@@ -31,24 +35,34 @@ rollingSpider.connect(function () {
       {
         delay: 5000,
         task: function () {
+          console.log("takeoff: "+ getFormattedDate());
           rollingSpider.takeOff();
           rollingSpider.flatTrim();
         }
       },
-      /*{
-        delay: 3000,
-        task: function () {
-          rollingSpider.forward();
-        }
-      },*/
       {
         delay: 5000,
         task: function () {
-          rollingSpider.land();
+          console.log("up: "+ getFormattedDate());
+          rollingSpider.up({steps: 30}, done());
         }
       },
       {
         delay: 5000,
+        task: function () {
+          console.log("frontFlip: "+ getFormattedDate());
+          rollingSpider.frontFlip();
+        }
+      },
+      {
+        delay: 5000,
+        task: function () {
+          console.log("land: "+ getFormattedDate());
+          rollingSpider.land();
+        }
+      },
+      {
+        delay: 4500,
         task: function () {
           temporal.clear();
           process.exit(0);

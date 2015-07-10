@@ -4,9 +4,9 @@ var board = new five.Board();
 board.on("ready", function() {
 
   // Three motion detectors (sensors)
-  var motionTakeoff = new five.Motion(4);
+  var motionTakeoff = new five.Motion(12);
   var motionFlip = new five.Motion(7);
-  var motionLand = new five.Motion(12);
+  var motionLand = new five.Motion(4);
 
   // LED (actuator)
   var led = new five.Led(13);
