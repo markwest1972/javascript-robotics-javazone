@@ -5,11 +5,11 @@ var temporal = require('temporal');
 
 // Global variables
 var ACTIVE = true;
-var STEPS = 2;
+var STEPS = 10;
 
 var rollingSpiderSwarm = new Swarm({
-  timeout: 10,
-  membership: 'RS_B030598'
+  timeout: 10/*,
+  membership: 'RS_B030598,RS_R107118'*/
 });
 var board = new five.Board();
 
@@ -19,15 +19,22 @@ rollingSpiderSwarm.on('assembled', function () {
   ACTIVE = true;
   rollingSpiderSwarm.wheelOff();
   rollingSpiderSwarm.flatTrim();
-  log('Swarm ['+rollingSpiderSwarm.targets+'] assembled and ready for flight: ');
+  log('Swarm assembled:');
+  this.members.forEach(function (member) {
+    log(' * [' + member.name +  '] ready for takeoff : ');
+  });
+
 });
 
 board.on('ready', function() {
 
   // Three motion detectors (sensors)
-  var motionTakeoff = new five.Motion(12);
-  var motionDance = new five.Motion(7);
-  var motionLand = new five.Motion(4);
+  var motionTakeoff = new five.Motion(4);
+  var motionDance = new five.Motion(5);
+  var motionLand = new five.Motion(2);
+
+  // Button (kill switch)
+  var killSwitch = new five.Button(8);
 
   // LED (actuator)
   var led = new five.Led(13);
@@ -46,6 +53,14 @@ board.on('ready', function() {
     log('motionLand calibrated: ');
   });
 
+  killSwitch.on('down', function(){
+    rollingSpiderSwarm.emergancy();
+    resetBlinkingLed();
+    ledBlinking = true;
+    led.blink(100);
+  });
+
+
   // Handle event from "takeoff" motion dectector
   motionTakeoff.on('motionstart', function() {
     log('motionTakeOff: ');
@@ -63,8 +78,8 @@ board.on('ready', function() {
       {
         delay: 2000,
         task: function () {
-          rollingSpiderSwarm.up({steps:20});
-          console.log('up:');
+          rollingSpiderSwarm.hover();
+          console.log('hover:');
         }
       },
       {
@@ -88,43 +103,25 @@ board.on('ready', function() {
 
     temporal.queue([
       {
-        delay: 1000,
+        delay: 2000,
         task: function () {
           log('Start Dancing....: ');
-          rollingSpiderSwarm.tiltLeft({steps:20});
+          rollingSpiderSwarm.up({steps:STEPS});
         }
       },
       {
-        delay: 2000,
+        delay: 3000,
         task: function () {
-          rollingSpiderSwarm.forward({steps:20});
-        }
-      },
-      {
-        delay: 2000,
-        task: function () {
-          rollingSpiderSwarm.tiltRight({steps:20});
+          rollingSpiderSwarm.turnRight({steps:STEPS*4, speed:80});
         }
       },{
-        delay: 2000,
+        delay: 2500,
         task: function () {
-          rollingSpiderSwarm.backward({steps:20});
-        }
-      },
-      {
-        delay: 1000,
-        task: function () {
-          rollingSpiderSwarm.hover();
+          rollingSpiderSwarm.turnLeft({steps:STEPS*4, speed:80});
         }
       },
       {
         delay: 2000,
-        task: function () {
-          rollingSpiderSwarm.leftFlip();
-        }
-      },
-      {
-        delay: 5000,
         task: function () {
           log('Finished Dancing....: ');
           temporal.clear();
